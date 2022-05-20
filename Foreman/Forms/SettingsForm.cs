@@ -57,6 +57,8 @@ namespace Foreman
 			public Keys KeyRightCode;
 			public decimal KeyScrollRatio;
 
+			public bool UseBlocks;
+
 			public SettingsFormOptions(DataCache cache)
 			{
 				DCache = cache;
@@ -188,7 +190,9 @@ namespace Foreman
 			KeyLeftInput.Text = Options.KeyLeftCode.ToString();
 			KeyRightInput.Text = Options.KeyRightCode.ToString();
 			KeyScrollRatioInput.Value = Options.KeyScrollRatio;
-			
+
+			cbUseBlocks.Checked = Options.UseBlocks;
+
 			//lists
 			LoadUnfilteredLists();
 			UpdateModList();
@@ -528,6 +532,8 @@ namespace Foreman
 			} catch { 
 			// wrong input => no save.. maybe later some will fix it...
 			}
+
+			Options.UseBlocks = cbUseBlocks.Checked;
 		}
 
 		//PRESET FORMS (Import / compare)------------------------------------------------------------------------------------------
