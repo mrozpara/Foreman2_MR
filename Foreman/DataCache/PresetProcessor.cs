@@ -37,8 +37,12 @@ namespace Foreman
 		{
 			string presetPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".pjson" });
 			string presetCustomPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".json" });
+			string presetBlockPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".bjson" });
 
+			//get main preset
 			JObject jsonData = JObject.Parse(File.ReadAllText(presetPath));
+
+			//get Custom preset
 			if (File.Exists(presetCustomPath))
 			{
 				JObject cjsonData = JObject.Parse(File.ReadAllText(presetCustomPath));
@@ -52,6 +56,27 @@ namespace Foreman
 								presetItemToken[parameter.Key] = parameter.Value;
 						else
 							((JArray)jsonData[groupToken.Key]).Add(itemToken);
+					}
+				}
+			}
+
+			//get Block preset (if enabled)
+			if (Properties.Settings.Default.UseBlockAssemblers)
+			{
+				if (File.Exists(presetBlockPath))
+				{
+					JObject bjsonData = JObject.Parse(File.ReadAllText(presetCustomPath));
+					foreach (var groupToken in bjsonData)
+					{
+						foreach (JObject itemToken in groupToken.Value)
+						{
+							JObject presetItemToken = (JObject)jsonData[groupToken.Key].FirstOrDefault(t => (string)t["name"] == (string)itemToken["name"]);
+							if (presetItemToken != null)
+								foreach (var parameter in itemToken)
+									presetItemToken[parameter.Key] = parameter.Value;
+							else
+								((JArray)jsonData[groupToken.Key]).Add(itemToken);
+						}
 					}
 				}
 			}
