@@ -129,6 +129,7 @@
             this.PullConsumerNodesCheckBox = new System.Windows.Forms.CheckBox();
             this.ControlsTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.KeyScrollRatioInput = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.KeyUpInput = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -141,7 +142,8 @@
             this.KeyRightInput = new System.Windows.Forms.TextBox();
             this.FormButtonsTable = new System.Windows.Forms.TableLayoutPanel();
             this.RecipeToolTip = new Foreman.RecipeToolTip();
-            this.KeyScrollRatioInput = new System.Windows.Forms.NumericUpDown();
+            this.UseBlocks = new System.Windows.Forms.Label();
+            this.cbUseBlocks = new System.Windows.Forms.CheckBox();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.DifficultyTable.SuspendLayout();
@@ -179,8 +181,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.PullConsumerNodesPowerInput)).BeginInit();
             this.ControlsTab.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.FormButtonsTable.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.KeyScrollRatioInput)).BeginInit();
+            this.FormButtonsTable.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox4
@@ -1605,6 +1607,8 @@
             this.tableLayoutPanel3.Controls.Add(this.KeyDownInput, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.KeyLeftInput, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.KeyRightInput, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.UseBlocks, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.cbUseBlocks, 1, 6);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
@@ -1625,6 +1629,30 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(464, 482);
             this.tableLayoutPanel3.TabIndex = 29;
             // 
+            // KeyScrollRatioInput
+            // 
+            this.tableLayoutPanel3.SetColumnSpan(this.KeyScrollRatioInput, 2);
+            this.KeyScrollRatioInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.KeyScrollRatioInput.Location = new System.Drawing.Point(70, 107);
+            this.KeyScrollRatioInput.Maximum = new decimal(new int[] {
+            256,
+            0,
+            0,
+            0});
+            this.KeyScrollRatioInput.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.KeyScrollRatioInput.Name = "KeyScrollRatioInput";
+            this.KeyScrollRatioInput.Size = new System.Drawing.Size(100, 20);
+            this.KeyScrollRatioInput.TabIndex = 22;
+            this.KeyScrollRatioInput.Value = new decimal(new int[] {
+            12,
+            0,
+            0,
+            0});
+            // 
             // label18
             // 
             this.label18.AutoSize = true;
@@ -1632,14 +1660,14 @@
             this.label18.Location = new System.Drawing.Point(3, 107);
             this.label18.Margin = new System.Windows.Forms.Padding(3);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(35, 20);
+            this.label18.Size = new System.Drawing.Size(61, 20);
             this.label18.TabIndex = 21;
             this.label18.Text = "Ratio";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // KeyUpInput
             // 
-            this.KeyUpInput.Location = new System.Drawing.Point(44, 3);
+            this.KeyUpInput.Location = new System.Drawing.Point(70, 3);
             this.KeyUpInput.Name = "KeyUpInput";
             this.KeyUpInput.Size = new System.Drawing.Size(100, 20);
             this.KeyUpInput.TabIndex = 17;
@@ -1651,7 +1679,7 @@
             this.label16.Location = new System.Drawing.Point(3, 81);
             this.label16.Margin = new System.Windows.Forms.Padding(3);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(35, 20);
+            this.label16.Size = new System.Drawing.Size(61, 20);
             this.label16.TabIndex = 15;
             this.label16.Text = "Right";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1660,10 +1688,10 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label15.Location = new System.Drawing.Point(3, 133);
+            this.label15.Location = new System.Drawing.Point(3, 153);
             this.label15.Margin = new System.Windows.Forms.Padding(3);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(35, 346);
+            this.label15.Size = new System.Drawing.Size(61, 326);
             this.label15.TabIndex = 14;
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -1674,7 +1702,7 @@
             this.label12.Location = new System.Drawing.Point(3, 55);
             this.label12.Margin = new System.Windows.Forms.Padding(3);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(35, 20);
+            this.label12.Size = new System.Drawing.Size(61, 20);
             this.label12.TabIndex = 13;
             this.label12.Text = "Left";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1686,7 +1714,7 @@
             this.label13.Location = new System.Drawing.Point(3, 3);
             this.label13.Margin = new System.Windows.Forms.Padding(3);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(35, 20);
+            this.label13.Size = new System.Drawing.Size(61, 20);
             this.label13.TabIndex = 7;
             this.label13.Text = "Up";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1698,28 +1726,28 @@
             this.label14.Location = new System.Drawing.Point(3, 29);
             this.label14.Margin = new System.Windows.Forms.Padding(3);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(35, 20);
+            this.label14.Size = new System.Drawing.Size(61, 20);
             this.label14.TabIndex = 12;
             this.label14.Text = "Down";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // KeyDownInput
             // 
-            this.KeyDownInput.Location = new System.Drawing.Point(44, 29);
+            this.KeyDownInput.Location = new System.Drawing.Point(70, 29);
             this.KeyDownInput.Name = "KeyDownInput";
             this.KeyDownInput.Size = new System.Drawing.Size(100, 20);
             this.KeyDownInput.TabIndex = 16;
             // 
             // KeyLeftInput
             // 
-            this.KeyLeftInput.Location = new System.Drawing.Point(44, 55);
+            this.KeyLeftInput.Location = new System.Drawing.Point(70, 55);
             this.KeyLeftInput.Name = "KeyLeftInput";
             this.KeyLeftInput.Size = new System.Drawing.Size(100, 20);
             this.KeyLeftInput.TabIndex = 18;
             // 
             // KeyRightInput
             // 
-            this.KeyRightInput.Location = new System.Drawing.Point(44, 81);
+            this.KeyRightInput.Location = new System.Drawing.Point(70, 81);
             this.KeyRightInput.Name = "KeyRightInput";
             this.KeyRightInput.Size = new System.Drawing.Size(100, 20);
             this.KeyRightInput.TabIndex = 19;
@@ -1750,29 +1778,24 @@
             this.RecipeToolTip.OwnerDraw = true;
             this.RecipeToolTip.ReshowDelay = 100000;
             // 
-            // KeyScrollRatioInput
+            // UseBlocks
             // 
-            this.tableLayoutPanel3.SetColumnSpan(this.KeyScrollRatioInput, 2);
-            this.KeyScrollRatioInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.KeyScrollRatioInput.Location = new System.Drawing.Point(44, 107);
-            this.KeyScrollRatioInput.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-            this.KeyScrollRatioInput.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.KeyScrollRatioInput.Name = "KeyScrollRatioInput";
-            this.KeyScrollRatioInput.Size = new System.Drawing.Size(100, 20);
-            this.KeyScrollRatioInput.TabIndex = 22;
-            this.KeyScrollRatioInput.Value = new decimal(new int[] {
-            12,
-            0,
-            0,
-            0});
+            this.UseBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UseBlocks.Location = new System.Drawing.Point(3, 130);
+            this.UseBlocks.Name = "UseBlocks";
+            this.UseBlocks.Size = new System.Drawing.Size(61, 20);
+            this.UseBlocks.TabIndex = 23;
+            this.UseBlocks.Text = "Use Blocks";
+            this.UseBlocks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbUseBlocks
+            // 
+            this.cbUseBlocks.AutoSize = true;
+            this.cbUseBlocks.Location = new System.Drawing.Point(70, 133);
+            this.cbUseBlocks.Name = "cbUseBlocks";
+            this.cbUseBlocks.Size = new System.Drawing.Size(15, 14);
+            this.cbUseBlocks.TabIndex = 24;
+            this.cbUseBlocks.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -1850,9 +1873,9 @@
             this.ControlsTab.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.KeyScrollRatioInput)).EndInit();
             this.FormButtonsTable.ResumeLayout(false);
             this.FormButtonsTable.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.KeyScrollRatioInput)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1971,5 +1994,7 @@
         private System.Windows.Forms.TextBox KeyRightInput;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown KeyScrollRatioInput;
+        private System.Windows.Forms.Label UseBlocks;
+        private System.Windows.Forms.CheckBox cbUseBlocks;
     }
 }

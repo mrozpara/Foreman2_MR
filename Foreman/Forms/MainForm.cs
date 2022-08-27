@@ -227,6 +227,8 @@ namespace Foreman
 			options.KeyRightCode = GraphViewer.KeyRightCode;
 			options.KeyScrollRatio = GraphViewer.KeyScrollRatio;
 
+			options.UseBlocks = Properties.Settings.Default.UseBlockAssemblers;
+
 			using (SettingsForm form = new SettingsForm(options))
 			{
 				form.StartPosition = FormStartPosition.Manual;
@@ -310,6 +312,8 @@ namespace Foreman
 					GraphViewer.KeyLeftCode = options.KeyLeftCode;
 					GraphViewer.KeyRightCode = options.KeyRightCode;
 					GraphViewer.KeyScrollRatio = options.KeyScrollRatio;
+
+					Properties.Settings.Default.UseBlockAssemblers = options.UseBlocks;
 
 					Properties.Settings.Default.ShowUnavailable = options.DEV_ShowUnavailableItems;
 					Properties.Settings.Default.Save();
