@@ -49,6 +49,8 @@ namespace Foreman
 		public event EventHandler<EventArgs> NodeStateChanged; //includes node state, as well as any changes that may influence the input/output links (ex: switching fuel, assembler, etc.)
 		public event EventHandler<EventArgs> NodeValuesChanged; //includes actual amount / actual rate changes (ex: graph solved), as well as minor updates (ex:beacon numbers, etc.)
 
+		public bool IgnoreOverproduction { get; set; }
+		public bool IgnoreManualNotMet { get; set; }
 		internal BaseNode(ProductionGraph graph, int nodeID)
 		{
 			MyGraph = graph;
@@ -65,6 +67,8 @@ namespace Foreman
 
 			InputLinks = new List<NodeLink>();
 			OutputLinks = new List<NodeLink>();
+
+			IgnoreOverproduction = false;
 		}
 
 		public bool AllLinksValid { get { return (InputLinks.Count(l => !l.IsValid) + OutputLinks.Count(l => !l.IsValid) == 0); } }
@@ -91,6 +95,9 @@ namespace Foreman
 
 		public bool IsOverproducing()
 		{
+			if (IgnoreOverproduction)
+				return false;
+
 			foreach (Item item in Outputs)
 				if (IsOverproducing(item))
 					return true;
@@ -115,7 +122,12 @@ namespace Foreman
 
 		public bool ManualRateNotMet()
 		{
-			return (RateType == RateType.Manual) && Math.Abs(ActualRatePerSec - DesiredRatePerSec) > 0.0001;
+			if (this is RecipeNode rNode)
+			{
+				return (RateType == RateType.Manual) && Math.Abs(ActualRatePerSec - DesiredRatePerSec) > 0.0001 && !rNode.IgnoreManualNotMet;
+			}
+			else
+				return (RateType == RateType.Manual) && Math.Abs(ActualRatePerSec - DesiredRatePerSec) > 0.0001;
 		}
 
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -159,6 +171,8 @@ namespace Foreman
 		public bool IsOverproducing() => MyNode.IsOverproducing();
 		public bool IsOverproducing(Item item) => MyNode.IsOverproducing(item);
 		public bool ManualRateNotMet() => MyNode.ManualRateNotMet();
+		public bool IgnoreOverproduction() => MyNode.IgnoreOverproduction;
+		public bool IgnoreManualNotMet() => MyNode.IgnoreManualNotMet;
 
 		private readonly BaseNode MyNode;
 
