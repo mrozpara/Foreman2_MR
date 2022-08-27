@@ -39,7 +39,7 @@ namespace Foreman
 
 		public bool SmartNodeDirection { get; set; }
 
-		public DataCache DCache { get; set; }
+		public DataCache LocalDCache { get; set; }
 		public ProductionGraph Graph { get; private set; }
 		public GridManager Grid { get; private set; }
 		public FloatingTooltipRenderer ToolTipRenderer { get; private set; }
@@ -179,7 +179,7 @@ namespace Foreman
 
 		public void AddItem(Point drawOrigin, Point newLocation)
 		{
-			if (string.IsNullOrEmpty(DCache.PresetName))
+			if (string.IsNullOrEmpty(LocalDCache.PresetName))
 			{
 				MessageBox.Show("The current preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt.");
 				return;
@@ -198,7 +198,7 @@ namespace Foreman
 
 		public void AddRecipe(Point drawOrigin, Item baseItem, Point newLocation, NewNodeType nNodeType, BaseNodeElement originElement = null, bool offsetLocationToItemTabLevel = false)
 		{
-			if(string.IsNullOrEmpty(DCache.PresetName))
+			if(string.IsNullOrEmpty(LocalDCache.PresetName))
 			{
 				DisposeLinkDrag();
 				MessageBox.Show("The current preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt.");
@@ -1184,8 +1184,8 @@ namespace Foreman
 			//preset options
 			info.AddValue("Version", Properties.Settings.Default.ForemanVersion);
 			info.AddValue("Object", "ProductionGraphViewer");
-			info.AddValue("SavedPresetName", DCache.PresetName);
-			info.AddValue("IncludedMods", DCache.IncludedMods.Select(m => m.Key + "|" + m.Value));
+			info.AddValue("SavedPresetName", LocalDCache.PresetName);
+			info.AddValue("IncludedMods", LocalDCache.IncludedMods.Select(m => m.Key + "|" + m.Value));
 
 			//graph viewer options
 			info.AddValue("Unit", Graph.SelectedRateUnit);
@@ -1199,10 +1199,10 @@ namespace Foreman
 			info.AddValue("FuelPriorityList", Graph.FuelSelector.FuelPriority.Select(i => i.Name));
 
 			//enabled lists
-			info.AddValue("EnabledRecipes", DCache.Recipes.Values.Where(r => r.Enabled).Select(r => r.Name));
-			info.AddValue("EnabledAssemblers", DCache.Assemblers.Values.Where(a => a.Enabled).Select(a => a.Name));
-			info.AddValue("EnabledModules", DCache.Modules.Values.Where(m => m.Enabled).Select(m => m.Name));
-			info.AddValue("EnabledBeacons", DCache.Beacons.Values.Where(b => b.Enabled).Select(b => b.Name));
+			info.AddValue("EnabledRecipes", LocalDCache.Recipes.Values.Where(r => r.Enabled).Select(r => r.Name));
+			info.AddValue("EnabledAssemblers", LocalDCache.Assemblers.Values.Where(a => a.Enabled).Select(a => a.Name));
+			info.AddValue("EnabledModules", LocalDCache.Modules.Values.Where(m => m.Enabled).Select(m => m.Name));
+			info.AddValue("EnabledBeacons", LocalDCache.Beacons.Values.Where(b => b.Enabled).Select(b => b.Name));
 
 			//graph :)
 			info.AddValue("ProductionGraph", Graph);
@@ -1210,7 +1210,7 @@ namespace Foreman
 
 		public void ImportNodesFromJson(JObject json, Point origin)
 		{
-			ProductionGraph.NewNodeCollection newNodeCollection = newNodeCollection = Graph.InsertNodesFromJson(DCache, json); //NOTE: missing items & recipes may be added here!
+			ProductionGraph.NewNodeCollection newNodeCollection = newNodeCollection = Graph.InsertNodesFromJson(LocalDCache, json); //NOTE: missing items & recipes may be added here!
 			if (newNodeCollection == null || newNodeCollection.newNodes.Count == 0)
 				return;
 
@@ -1243,40 +1243,11 @@ namespace Foreman
 			Graph.UpdateNodeValues();
 		}
 
-		public void LoadPreset(Preset preset)
-		{
-			using (DataLoadForm form = new DataLoadForm(preset))
-			{
-				form.StartPosition = FormStartPosition.Manual;
-				form.Left = ParentForm.Left + 150;
-				form.Top = ParentForm.Top + 200;
-				DialogResult result = form.ShowDialog(); //LOAD FACTORIO DATA
-				DCache = form.GetDataCache();
-				if (result == DialogResult.Abort)
-				{
-					MessageBox.Show("The current preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt. Switching to the default preset (Factorio 1.1 Vanilla)");
-					Properties.Settings.Default.CurrentPresetName = MainForm.DefaultPreset;
-					using (DataLoadForm form2 = new DataLoadForm(new Preset(MainForm.DefaultPreset, false, true)))
-					{
-						form2.StartPosition = FormStartPosition.Manual;
-						form2.Left = ParentForm.Left + 150;
-						form2.Top = ParentForm.Top + 200;
-						DialogResult result2 = form2.ShowDialog(); //LOAD default preset
-						DCache = form2.GetDataCache();
-						if (result2 == DialogResult.Abort)
-							MessageBox.Show("The default preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt. No Preset is loaded!");
-					}
-				}
-				GC.Collect(); //loaded a new data cache - the old one should be collected (data caches can be over 1gb in size due to icons, plus whatever was in the old graph)
-			}
-			Invalidate();
-		}
-
 		public async Task LoadFromJson(JObject json, bool useFirstPreset, bool setEnablesFromJson)
 		{
 			if (json["Version"] == null || (int)json["Version"] != Properties.Settings.Default.ForemanVersion || json["Object"] == null || (string)json["Object"] != "ProductionGraphViewer")
 			{
-				json = VersionUpdater.UpdateSave(json, DCache);
+				json = VersionUpdater.UpdateSave(json, LocalDCache);
 				if (json == null) //update failed
 					return;
 			}
@@ -1358,15 +1329,16 @@ namespace Foreman
 			ClearGraph();
 
 			//load new preset
-			LoadPreset(chosenPreset);
+			//TODO_MR: przemyslec
+			//LoadPreset(chosenPreset);
 
 			//set up graph options
 			Graph.SelectedRateUnit = (ProductionGraph.RateUnit)(int)json["Unit"];
 			Graph.AssemblerSelector.DefaultSelectionStyle = (AssemblerSelector.Style)(int)json["AssemblerSelectorStyle"];
 			Graph.ModuleSelector.DefaultSelectionStyle = (ModuleSelector.Style)(int)json["ModuleSelectorStyle"];
 			foreach (string fuelType in json["FuelPriorityList"].Select(t => (string)t))
-				if (DCache.Items.ContainsKey(fuelType))
-					Graph.FuelSelector.UseFuel(DCache.Items[fuelType]);
+				if (LocalDCache.Items.ContainsKey(fuelType))
+					Graph.FuelSelector.UseFuel(LocalDCache.Items[fuelType]);
 			Graph.EnableExtraProductivityForNonMiners = (bool)json["ExtraProdForNonMiners"];
 
 			//set up graph view options
@@ -1377,34 +1349,34 @@ namespace Foreman
 			//update enabled statuses
 			if (setEnablesFromJson)
 			{
-				foreach (Beacon beacon in DCache.Beacons.Values)
+				foreach (Beacon beacon in LocalDCache.Beacons.Values)
 					beacon.Enabled = false;
 				foreach (string beacon in json["EnabledBeacons"].Select(t => (string)t).ToList())
-					if (DCache.Beacons.ContainsKey(beacon))
-						DCache.Beacons[beacon].Enabled = true;
+					if (LocalDCache.Beacons.ContainsKey(beacon))
+						LocalDCache.Beacons[beacon].Enabled = true;
 
-				foreach (Assembler assembler in DCache.Assemblers.Values)
+				foreach (Assembler assembler in LocalDCache.Assemblers.Values)
 					assembler.Enabled = false;
 				foreach (string name in json["EnabledAssemblers"].Select(t => (string)t).ToList())
-					if (DCache.Assemblers.ContainsKey(name))
-						DCache.Assemblers[name].Enabled = true;
-				DCache.RocketAssembler.Enabled = DCache.Assemblers["rocket-silo"]?.Enabled ?? false;
+					if (LocalDCache.Assemblers.ContainsKey(name))
+						LocalDCache.Assemblers[name].Enabled = true;
+				LocalDCache.RocketAssembler.Enabled = LocalDCache.Assemblers["rocket-silo"]?.Enabled ?? false;
 
-				foreach (Module module in DCache.Modules.Values)
+				foreach (Module module in LocalDCache.Modules.Values)
 					module.Enabled = false;
 				foreach (string name in json["EnabledModules"].Select(t => (string)t).ToList())
-					if (DCache.Modules.ContainsKey(name))
-						DCache.Modules[name].Enabled = true;
+					if (LocalDCache.Modules.ContainsKey(name))
+						LocalDCache.Modules[name].Enabled = true;
 
-				foreach (Recipe recipe in DCache.Recipes.Values)
+				foreach (Recipe recipe in LocalDCache.Recipes.Values)
 					recipe.Enabled = false;
 				foreach (string recipe in json["EnabledRecipes"].Select(t => (string)t).ToList())
-					if (DCache.Recipes.ContainsKey(recipe))
-						DCache.Recipes[recipe].Enabled = true;
+					if (LocalDCache.Recipes.ContainsKey(recipe))
+						LocalDCache.Recipes[recipe].Enabled = true;
 			}
 
 			//add all nodes
-			ProductionGraph.NewNodeCollection collection = Graph.InsertNodesFromJson(DCache, json["ProductionGraph"]);
+			ProductionGraph.NewNodeCollection collection = Graph.InsertNodesFromJson(LocalDCache, json["ProductionGraph"]);
 
 			//check for old import
 			if (json["OldImport"] != null)

@@ -400,7 +400,7 @@ namespace Foreman
 		protected override List<Group> GetSortedGroups()
 		{
 			List<Group> groups = new List<Group>();
-			foreach (Group group in ShowUnavailable ? PGViewer.DCache.Groups.Values : PGViewer.DCache.AvailableGroups)
+			foreach (Group group in ShowUnavailable ? PGViewer.LocalDCache.Groups.Values : PGViewer.LocalDCache.AvailableGroups)
 			{
 				int itemCount = 0;
 				foreach (Subgroup sgroup in group.Subgroups)
@@ -564,7 +564,7 @@ namespace Foreman
 		protected override List<Group> GetSortedGroups()
 		{
 			List<Group> groups = new List<Group>();
-			foreach (Group group in ShowUnavailable ? PGViewer.DCache.Groups.Values : PGViewer.DCache.AvailableGroups)
+			foreach (Group group in ShowUnavailable ? PGViewer.LocalDCache.Groups.Values : PGViewer.LocalDCache.AvailableGroups)
 			{
 				int recipeCount = 0;
 				foreach (Subgroup sgroup in group.Subgroups)

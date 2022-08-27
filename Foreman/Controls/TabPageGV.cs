@@ -18,7 +18,7 @@ namespace Foreman.Controls
 		public string savefilePath = null;
 
 		public  ProductionGraphViewer GraphViewer { get; }
-		public TabPageGV()
+		public TabPageGV(MainForm mainForm)
 		{
 			InitializeComponent();
 			GraphViewer = new ProductionGraphViewer();
@@ -29,7 +29,7 @@ namespace Foreman.Controls
 			GraphViewer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			GraphViewer.BackColor = System.Drawing.Color.White;
 			GraphViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			GraphViewer.DCache = null;
+			GraphViewer.LocalDCache = mainForm.GlobalDataCache;
 			GraphViewer.Dock = System.Windows.Forms.DockStyle.Fill;
 			GraphViewer.IconsOnly = false;
 			GraphViewer.IconsSize = 32;

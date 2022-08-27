@@ -15,6 +15,7 @@ namespace Foreman
 		internal const string DefaultPreset = "Factorio 1.1 Vanilla";
 
 		public ProductionGraphViewer GraphViewer { get; set; }
+		public DataCache GlobalDataCache;
 
 		public MainForm()
 		{
@@ -29,7 +30,51 @@ namespace Foreman
 			SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 		}
 
-        private void MainForm_Load(object sender, EventArgs e)
+		private void LoadPreset()
+		{
+			List<Preset> validPresets = MainForm.GetValidPresetsList();
+			if (validPresets != null && validPresets.Count > 0)
+			{
+				Properties.Settings.Default.CurrentPresetName = validPresets[0].Name;
+				LoadPreset(validPresets[0]);
+			}
+			else
+			{
+				Properties.Settings.Default.CurrentPresetName = "No Preset!";
+			}
+
+			Properties.Settings.Default.Save();
+		}
+		public void LoadPreset(Preset preset)
+		{
+			using (DataLoadForm form = new DataLoadForm(preset))
+			{
+				form.StartPosition = FormStartPosition.Manual;
+				form.Left = this.Left + 150;
+				form.Top = this.Top + 200;
+				DialogResult result = form.ShowDialog(); //LOAD FACTORIO DATA
+				GlobalDataCache = form.GetDataCache();
+				if (result == DialogResult.Abort)
+				{
+					MessageBox.Show("The current preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt. Switching to the default preset (Factorio 1.1 Vanilla)");
+					Properties.Settings.Default.CurrentPresetName = MainForm.DefaultPreset;
+					using (DataLoadForm form2 = new DataLoadForm(new Preset(MainForm.DefaultPreset, false, true)))
+					{
+						form2.StartPosition = FormStartPosition.Manual;
+						form2.Left = this.Left + 150;
+						form2.Top = this.Top + 200;
+						DialogResult result2 = form2.ShowDialog(); //LOAD default preset
+						GlobalDataCache = form2.GetDataCache();
+						if (result2 == DialogResult.Abort)
+							MessageBox.Show("The default preset (" + Properties.Settings.Default.CurrentPresetName + ") is corrupt. No Preset is loaded!");
+					}
+				}
+				GC.Collect(); //loaded a new data cache - the old one should be collected (data caches can be over 1gb in size due to icons, plus whatever was in the old graph)
+			}
+			Invalidate();
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
 		{
 			WindowState = FormWindowState.Maximized;
 
@@ -43,6 +88,7 @@ namespace Foreman
 
 			Properties.Settings.Default.Save();
 
+			LoadPreset();
 			GraphViewerTabContainer.NewGraph();
 
 			if (GraphViewer != null)
@@ -177,7 +223,7 @@ namespace Foreman
 
 		private async void SettingsButton_Click(object sender, EventArgs e)
 		{
-			SettingsForm.SettingsFormOptions options = new SettingsForm.SettingsFormOptions(GraphViewer.DCache);
+			SettingsForm.SettingsFormOptions options = new SettingsForm.SettingsFormOptions(GlobalDataCache);
 
 			options.Presets = GetValidPresetsList();
 			options.SelectedPreset = options.Presets[0];
@@ -214,10 +260,10 @@ namespace Foreman
 			options.Solver_PullConsumerNodes = GraphViewer.Graph.PullOutputNodes;
 			options.Solver_PullConsumerNodesPower = GraphViewer.Graph.PullOutputNodesPower;
 
-			options.EnabledObjects.UnionWith(GraphViewer.DCache.Recipes.Values.Where(r => r.Enabled));
-			options.EnabledObjects.UnionWith(GraphViewer.DCache.Assemblers.Values.Where(r => r.Enabled));
-			options.EnabledObjects.UnionWith(GraphViewer.DCache.Beacons.Values.Where(r => r.Enabled));
-			options.EnabledObjects.UnionWith(GraphViewer.DCache.Modules.Values.Where(r => r.Enabled));
+			options.EnabledObjects.UnionWith(GlobalDataCache.Recipes.Values.Where(r => r.Enabled));
+			options.EnabledObjects.UnionWith(GlobalDataCache.Assemblers.Values.Where(r => r.Enabled));
+			options.EnabledObjects.UnionWith(GlobalDataCache.Beacons.Values.Where(r => r.Enabled));
+			options.EnabledObjects.UnionWith(GlobalDataCache.Modules.Values.Where(r => r.Enabled));
 
 			//scroll keys
 			options.KeyDownCode = GraphViewer.KeyDownCode;
@@ -246,15 +292,15 @@ namespace Foreman
 					}
 					else //not loading a new preset -> update the enabled statuses
 					{
-						foreach (Recipe recipe in GraphViewer.DCache.Recipes.Values)
+						foreach (Recipe recipe in GlobalDataCache.Recipes.Values)
 							recipe.Enabled = options.EnabledObjects.Contains(recipe);
-						foreach (Assembler assembler in GraphViewer.DCache.Assemblers.Values)
+						foreach (Assembler assembler in GlobalDataCache.Assemblers.Values)
 							assembler.Enabled = options.EnabledObjects.Contains(assembler);
-						foreach (Beacon beacon in GraphViewer.DCache.Beacons.Values)
+						foreach (Beacon beacon in GlobalDataCache.Beacons.Values)
 							beacon.Enabled = options.EnabledObjects.Contains(beacon);
-						foreach (Module module in GraphViewer.DCache.Modules.Values)
+						foreach (Module module in GlobalDataCache.Modules.Values)
 							module.Enabled = options.EnabledObjects.Contains(module);
-						GraphViewer.DCache.RocketAssembler.Enabled = GraphViewer.DCache.Assemblers["rocket-silo"]?.Enabled?? false;
+						GlobalDataCache.RocketAssembler.Enabled = GlobalDataCache.Assemblers["rocket-silo"]?.Enabled?? false;
 					}
 
 					GraphViewer.LevelOfDetail = options.LevelOfDetail;
