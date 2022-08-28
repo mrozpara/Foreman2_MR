@@ -1272,59 +1272,62 @@ namespace Foreman
 			// any errors will prompt a message box saying that 'incompatibility was found, but proceeding anyways'.
 			List<Preset> allPresets = MainForm.GetValidPresetsList();
 			List<PresetErrorPackage> presetErrors = new List<PresetErrorPackage>();
-			Preset chosenPreset = null;
-			if (useFirstPreset)
-				chosenPreset = allPresets[0];
-			else
+
+			if (!Properties.Settings.Default.UseGlobalPreset)
 			{
-				//test for the preset specified in the json save
-				Preset savedWPreset = allPresets.FirstOrDefault(p => p.Name == (string)json["SavedPresetName"]);
-				if (savedWPreset != null)
+				Preset chosenPreset = null;
+				if (useFirstPreset)
+					chosenPreset = allPresets[0];
+				else
 				{
-					var errors = await PresetProcessor.TestPreset(savedWPreset, modSet, itemNames, assemblerNames, recipeShorts);
-					if (errors != null && errors.ErrorCount == 0) //no errors found here. We will then use this exact preset and not search for a different one
-						chosenPreset = savedWPreset;
-					else
+					//test for the preset specified in the json save
+					Preset savedWPreset = allPresets.FirstOrDefault(p => p.Name == (string)json["SavedPresetName"]);
+					if (savedWPreset != null)
 					{
-						//errors found. even though the name fits, but the preset seems to be the wrong one. Proceed with searching for best-fit
-						if(errors != null)
-							presetErrors.Add(errors);
-						allPresets.Remove(savedWPreset);
-					}
-				}
-
-				//havent found the preset, or it returned some errors (not good) -> have to search for best fit (and leave the decision to user if we have multiple)
-				if (chosenPreset == null)
-				{
-					foreach (Preset preset in allPresets)
-					{
-						PresetErrorPackage errors = await PresetProcessor.TestPreset(preset, modSet, itemNames, assemblerNames, recipeShorts);
-						if (errors != null)
-							presetErrors.Add(errors);
+						var errors = await PresetProcessor.TestPreset(savedWPreset, modSet, itemNames, assemblerNames, recipeShorts);
+						if (errors != null && errors.ErrorCount == 0) //no errors found here. We will then use this exact preset and not search for a different one
+							chosenPreset = savedWPreset;
+						else
+						{
+							//errors found. even though the name fits, but the preset seems to be the wrong one. Proceed with searching for best-fit
+							if (errors != null)
+								presetErrors.Add(errors);
+							allPresets.Remove(savedWPreset);
+						}
 					}
 
-					//show the menu to select the preferred preset
-					using (PresetSelectionForm form = new PresetSelectionForm(presetErrors))
+					//havent found the preset, or it returned some errors (not good) -> have to search for best fit (and leave the decision to user if we have multiple)
+					if (chosenPreset == null)
 					{
-						form.StartPosition = FormStartPosition.Manual;
-						form.Left = ParentForm.Left + 50;
-						form.Top = ParentForm.Top + 50;
+						foreach (Preset preset in allPresets)
+						{
+							PresetErrorPackage errors = await PresetProcessor.TestPreset(preset, modSet, itemNames, assemblerNames, recipeShorts);
+							if (errors != null)
+								presetErrors.Add(errors);
+						}
 
-						if (form.ShowDialog() != DialogResult.OK || form.ChosenPreset == null) //null check is not necessary - if we get an ok dialogresult, we know it will be set
-							return;
-						chosenPreset = form.ChosenPreset;
+						//show the menu to select the preferred preset
+						using (PresetSelectionForm form = new PresetSelectionForm(presetErrors))
+						{
+							form.StartPosition = FormStartPosition.Manual;
+							form.Left = ParentForm.Left + 50;
+							form.Top = ParentForm.Top + 50;
+
+							if (form.ShowDialog() != DialogResult.OK || form.ChosenPreset == null) //null check is not necessary - if we get an ok dialogresult, we know it will be set
+								return;
+							chosenPreset = form.ChosenPreset;
+							Properties.Settings.Default.CurrentPresetName = chosenPreset.Name;
+							Properties.Settings.Default.Save();
+						}
+					}
+					else if (chosenPreset.Name != Properties.Settings.Default.CurrentPresetName) //we had to switch the preset to a new one (without the user having to select a preset from a list)
+					{
+						MessageBox.Show(string.Format("Loaded graph uses a different Preset.\nPreset switched from \"{0}\" to \"{1}\"", Properties.Settings.Default.CurrentPresetName, chosenPreset.Name));
 						Properties.Settings.Default.CurrentPresetName = chosenPreset.Name;
 						Properties.Settings.Default.Save();
 					}
 				}
-				else if (chosenPreset.Name != Properties.Settings.Default.CurrentPresetName) //we had to switch the preset to a new one (without the user having to select a preset from a list)
-				{
-					MessageBox.Show(string.Format("Loaded graph uses a different Preset.\nPreset switched from \"{0}\" to \"{1}\"", Properties.Settings.Default.CurrentPresetName, chosenPreset.Name));
-					Properties.Settings.Default.CurrentPresetName = chosenPreset.Name;
-					Properties.Settings.Default.Save();
-				}
 			}
-
 			//clear graph
 			ClearGraph();
 
