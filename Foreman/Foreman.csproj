@@ -201,6 +201,7 @@
     <Compile Include="DataCache\DataTypes\Module.cs" />
     <Compile Include="DataCache\DataTypes\Technology.cs" />
     <Compile Include="DataCache\InfoPackageClasses.cs" />
+    <Compile Include="DataCache\Preset.cs" />
     <Compile Include="DataCache\PresetProcessor.cs" />
     <Compile Include="Forms\GraphSummaryForm.cs">
       <SubType>Form</SubType>
