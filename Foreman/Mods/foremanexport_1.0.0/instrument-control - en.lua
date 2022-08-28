@@ -60,7 +60,7 @@ local function ExportResearch()
 			table.insert(ttech['research_unit_ingredients'], tingredient)
 		end
 		ttech['research_unit_count'] = tech.research_unit_count
-
+		ttech['order'] = tech.order
 		ttech['lid'] = '$'..localindex
 		ExportLocalisedString(tech.localised_name, localindex)
 		localindex = localindex + 1

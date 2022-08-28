@@ -47,8 +47,13 @@ namespace Foreman
 
 			Icon = DataCache.UnknownIcon;
 			AverageColor = Color.Black;
+			string l_order;
+			if (order != null)
+				l_order = order;
+			else
+				l_order = "-";
 
-			OrderCompareArray = order.Split(orderSeparators).Where(s => !string.IsNullOrEmpty(s)).ToArray();
+			OrderCompareArray = l_order.Split(orderSeparators).Where(s => !string.IsNullOrEmpty(s)).ToArray();
 		}
 
 		public void SetIconAndColor(IconColorPair icp)

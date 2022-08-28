@@ -128,7 +128,7 @@ namespace Foreman
 
 		private void GenerateHelperObjects()
 		{
-			startingTech = new TechnologyPrototype(this, "§§t:starting_tech", "Starting Technology");
+			startingTech = new TechnologyPrototype(this, "§§t:starting_tech", "Starting Technology", "-");
 			startingTech.Tier = 0;
 
 			extraFormanGroup = new GroupPrototype(this, "§§g:extra_group", "Resource Extraction\nPower Generation\nRocket Launches", "~~~z1");
@@ -716,7 +716,8 @@ namespace Foreman
 			TechnologyPrototype technology = new TechnologyPrototype(
 				this,
 				(string)objJToken["name"],
-				(string)objJToken["localised_name"]);
+				(string)objJToken["localised_name"],
+				(string)objJToken["order"]);
 
 			if (iconCache.ContainsKey((string)objJToken["icon_name"]))
 				technology.SetIconAndColor(iconCache[(string)objJToken["icon_name"]]);

@@ -32,7 +32,7 @@ namespace Foreman
 		internal List<Item> sciPackList { get; private set; }
 
 
-		public TechnologyPrototype(DataCache dCache, string name, string friendlyName) : base(dCache, name, friendlyName, "-")
+		public TechnologyPrototype(DataCache dCache, string name, string friendlyName, string order) : base(dCache, name, friendlyName, order)
 		{
 			prerequisites = new HashSet<TechnologyPrototype>();
 			postTechs = new HashSet<TechnologyPrototype>();
