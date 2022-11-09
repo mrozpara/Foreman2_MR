@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
 
 namespace Foreman
 {
-	public class DataCache
+	public class DataCache : ISerializable
 	{
 		public string PresetName { get; private set; }
 
@@ -25,6 +26,9 @@ namespace Foreman
 
 		public IReadOnlyDictionary<string, string> IncludedMods { get { return includedMods; } }
 		public IReadOnlyDictionary<string, Technology> Technologies { get { return technologies; } }
+		public IReadOnlyList<Technology> TechnologiesSorted { get { return technologiesSorted; } }
+		private List<TechnologyPrototype> technologiesSorted;
+
 		public IReadOnlyDictionary<string, Group> Groups { get { return groups; } }
 		public IReadOnlyDictionary<string, Subgroup> Subgroups { get { return subgroups; } }
 		public IReadOnlyDictionary<string, Item> Items { get { return items; } }
@@ -106,6 +110,8 @@ namespace Foreman
 
 			includedMods = new Dictionary<string, string>();
 			technologies = new Dictionary<string, Technology>();
+			technologiesSorted = new List<TechnologyPrototype>();
+
 			groups = new Dictionary<string, Group>();
 			subgroups = new Dictionary<string, Subgroup>();
 			items = new Dictionary<string, Item>();
@@ -268,6 +274,8 @@ namespace Foreman
 				foreach (SubgroupPrototype sg in subgroups.Values)
 					sg.SortIRs();
 
+				SortTechnologies();
+	
 				//The data read by the dataCache (json preset) includes everything. We need to now process it such that any items/recipes that cant be used dont appear.
 				//thus any object that has Unavailable set to true should be ignored. We will leave the option to use them to the user, but in most cases its better without them
 
@@ -312,7 +320,12 @@ namespace Foreman
 			});
 		}
 
-		public void Clear()
+        public void SortTechnologies()
+        {
+			technologiesSorted.Sort();
+		}
+
+        public void Clear()
 		{
 			RecipePrototype.ResetRecipeIDCounter();
 
@@ -745,7 +758,9 @@ namespace Foreman
 				}
 			}
 
+			technology.ResearchCost = (double)objJToken["research_unit_count"];
 			technologies.Add(technology.Name, technology);
+			technologiesSorted.Add(technology);
 		}
 
 		private void ProcessTechnologyP2(JToken objJToken)
@@ -1705,5 +1720,15 @@ namespace Foreman
 				Console.WriteLine();
 			}
 		}
-	}
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+			//enabled lists
+			info.AddValue("EnabledRecipes", Recipes.Values.Where(r => r.Enabled).Select(r => r.Name));
+			info.AddValue("EnabledAssemblers", Assemblers.Values.Where(a => a.Enabled).Select(a => a.Name));
+			info.AddValue("EnabledModules", Modules.Values.Where(m => m.Enabled).Select(m => m.Name));
+			info.AddValue("EnabledBeacons", Beacons.Values.Where(b => b.Enabled).Select(b => b.Name));
+            info.AddValue("EnabledTechnologies", Technologies.Values.Where(t => t.Enabled).Select(t => t.Name));
+        }
+    }
 }

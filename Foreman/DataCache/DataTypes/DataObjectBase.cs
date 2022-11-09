@@ -95,7 +95,17 @@ namespace Foreman
 		{
 			if (other is DataObjectBasePrototype otherP)
 			{
+				if (otherP is TechnologyPrototype)
+				{
+					if (Enabled && otherP.Enabled)
+						return LFriendlyName.CompareTo(otherP.LFriendlyName);
+					if (!Enabled && !otherP.Enabled)
+						return LFriendlyName.CompareTo(otherP.LFriendlyName);
 
+					if (Enabled || !otherP.Enabled) return 1;
+					if (!Enabled || otherP.Enabled) return -1;
+
+				}
 				//order comparison is apparently quite convoluted - any time we have brackets ([ or ]), it signifies a different order part.
 				//each part is compared char-by-char, and in the case of the longer string it goes first.
 				//in terms of sections, the sorter section goes first (ex: a[0] goes before a[0]-1)

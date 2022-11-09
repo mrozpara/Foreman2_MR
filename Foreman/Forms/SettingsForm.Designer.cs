@@ -65,6 +65,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.FilterTextBox = new System.Windows.Forms.TextBox();
             this.SetEnabledFromSciencePacksButton = new System.Windows.Forms.Button();
+            this.btnEnableByTech = new System.Windows.Forms.Button();
             this.PresetsTable = new System.Windows.Forms.TableLayoutPanel();
             this.ImportPresetButton = new System.Windows.Forms.Button();
             this.ComparePresetsButton = new System.Windows.Forms.Button();
@@ -140,10 +141,10 @@
             this.KeyDownInput = new System.Windows.Forms.TextBox();
             this.KeyLeftInput = new System.Windows.Forms.TextBox();
             this.KeyRightInput = new System.Windows.Forms.TextBox();
-            this.FormButtonsTable = new System.Windows.Forms.TableLayoutPanel();
-            this.RecipeToolTip = new Foreman.RecipeToolTip();
             this.UseBlocks = new System.Windows.Forms.Label();
             this.cbUseBlocks = new System.Windows.Forms.CheckBox();
+            this.FormButtonsTable = new System.Windows.Forms.TableLayoutPanel();
+            this.RecipeToolTip = new Foreman.RecipeToolTip();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.DifficultyTable.SuspendLayout();
@@ -324,16 +325,18 @@
             this.EnabledObjectsTable.Controls.Add(this.EnabledObjectsTabControl, 0, 5);
             this.EnabledObjectsTable.Controls.Add(this.FilterTextBox, 1, 3);
             this.EnabledObjectsTable.Controls.Add(this.SetEnabledFromSciencePacksButton, 0, 1);
+            this.EnabledObjectsTable.Controls.Add(this.btnEnableByTech, 1, 1);
             this.EnabledObjectsTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.EnabledObjectsTable.Location = new System.Drawing.Point(2, 18);
             this.EnabledObjectsTable.Name = "EnabledObjectsTable";
-            this.EnabledObjectsTable.RowCount = 6;
+            this.EnabledObjectsTable.RowCount = 7;
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.EnabledObjectsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.EnabledObjectsTable.Size = new System.Drawing.Size(460, 462);
             this.EnabledObjectsTable.TabIndex = 0;
             // 
@@ -410,7 +413,7 @@
             this.EnabledObjectsTabControl.Multiline = true;
             this.EnabledObjectsTabControl.Name = "EnabledObjectsTabControl";
             this.EnabledObjectsTabControl.SelectedIndex = 0;
-            this.EnabledObjectsTabControl.Size = new System.Drawing.Size(452, 328);
+            this.EnabledObjectsTabControl.Size = new System.Drawing.Size(452, 308);
             this.EnabledObjectsTabControl.TabIndex = 27;
             // 
             // AssemblersPage
@@ -420,7 +423,7 @@
             this.AssemblersPage.Location = new System.Drawing.Point(4, 22);
             this.AssemblersPage.Margin = new System.Windows.Forms.Padding(2);
             this.AssemblersPage.Name = "AssemblersPage";
-            this.AssemblersPage.Size = new System.Drawing.Size(444, 302);
+            this.AssemblersPage.Size = new System.Drawing.Size(444, 282);
             this.AssemblersPage.TabIndex = 0;
             this.AssemblersPage.Text = "Assemblers";
             this.AssemblersPage.UseVisualStyleBackColor = true;
@@ -439,7 +442,7 @@
             this.AssemblerListView.LabelWrap = false;
             this.AssemblerListView.Location = new System.Drawing.Point(0, 0);
             this.AssemblerListView.Name = "AssemblerListView";
-            this.AssemblerListView.Size = new System.Drawing.Size(444, 302);
+            this.AssemblerListView.Size = new System.Drawing.Size(444, 282);
             this.AssemblerListView.SmallImageList = this.IconList;
             this.AssemblerListView.TabIndex = 17;
             this.AssemblerListView.UseCompatibleStateImageBehavior = false;
@@ -468,7 +471,7 @@
             this.MinersPage.Location = new System.Drawing.Point(4, 22);
             this.MinersPage.Margin = new System.Windows.Forms.Padding(2);
             this.MinersPage.Name = "MinersPage";
-            this.MinersPage.Size = new System.Drawing.Size(444, 302);
+            this.MinersPage.Size = new System.Drawing.Size(444, 0);
             this.MinersPage.TabIndex = 2;
             this.MinersPage.Text = "Miners";
             this.MinersPage.UseVisualStyleBackColor = true;
@@ -487,7 +490,7 @@
             this.MinerListView.LabelWrap = false;
             this.MinerListView.Location = new System.Drawing.Point(0, 0);
             this.MinerListView.Name = "MinerListView";
-            this.MinerListView.Size = new System.Drawing.Size(444, 302);
+            this.MinerListView.Size = new System.Drawing.Size(444, 0);
             this.MinerListView.SmallImageList = this.IconList;
             this.MinerListView.TabIndex = 17;
             this.MinerListView.UseCompatibleStateImageBehavior = false;
@@ -508,7 +511,7 @@
             this.PowersPage.Controls.Add(this.PowerListView);
             this.PowersPage.Location = new System.Drawing.Point(4, 22);
             this.PowersPage.Name = "PowersPage";
-            this.PowersPage.Size = new System.Drawing.Size(444, 302);
+            this.PowersPage.Size = new System.Drawing.Size(444, 0);
             this.PowersPage.TabIndex = 5;
             this.PowersPage.Text = "Power";
             this.PowersPage.UseVisualStyleBackColor = true;
@@ -527,7 +530,7 @@
             this.PowerListView.LabelWrap = false;
             this.PowerListView.Location = new System.Drawing.Point(0, 0);
             this.PowerListView.Name = "PowerListView";
-            this.PowerListView.Size = new System.Drawing.Size(444, 302);
+            this.PowerListView.Size = new System.Drawing.Size(444, 0);
             this.PowerListView.SmallImageList = this.IconList;
             this.PowerListView.TabIndex = 18;
             this.PowerListView.UseCompatibleStateImageBehavior = false;
@@ -548,7 +551,7 @@
             this.BeaconsPage.Controls.Add(this.BeaconListView);
             this.BeaconsPage.Location = new System.Drawing.Point(4, 22);
             this.BeaconsPage.Name = "BeaconsPage";
-            this.BeaconsPage.Size = new System.Drawing.Size(444, 302);
+            this.BeaconsPage.Size = new System.Drawing.Size(444, 0);
             this.BeaconsPage.TabIndex = 6;
             this.BeaconsPage.Text = "Beacons";
             this.BeaconsPage.UseVisualStyleBackColor = true;
@@ -567,7 +570,7 @@
             this.BeaconListView.LabelWrap = false;
             this.BeaconListView.Location = new System.Drawing.Point(0, 0);
             this.BeaconListView.Name = "BeaconListView";
-            this.BeaconListView.Size = new System.Drawing.Size(444, 302);
+            this.BeaconListView.Size = new System.Drawing.Size(444, 0);
             this.BeaconListView.SmallImageList = this.IconList;
             this.BeaconListView.TabIndex = 19;
             this.BeaconListView.UseCompatibleStateImageBehavior = false;
@@ -590,7 +593,7 @@
             this.ModulesPage.Location = new System.Drawing.Point(4, 22);
             this.ModulesPage.Margin = new System.Windows.Forms.Padding(2);
             this.ModulesPage.Name = "ModulesPage";
-            this.ModulesPage.Size = new System.Drawing.Size(444, 302);
+            this.ModulesPage.Size = new System.Drawing.Size(444, 0);
             this.ModulesPage.TabIndex = 3;
             this.ModulesPage.Text = "Modules";
             this.ModulesPage.UseVisualStyleBackColor = true;
@@ -609,7 +612,7 @@
             this.ModuleListView.LabelWrap = false;
             this.ModuleListView.Location = new System.Drawing.Point(0, 0);
             this.ModuleListView.Name = "ModuleListView";
-            this.ModuleListView.Size = new System.Drawing.Size(444, 302);
+            this.ModuleListView.Size = new System.Drawing.Size(444, 0);
             this.ModuleListView.SmallImageList = this.IconList;
             this.ModuleListView.TabIndex = 17;
             this.ModuleListView.UseCompatibleStateImageBehavior = false;
@@ -631,7 +634,7 @@
             this.RecipesPage.Location = new System.Drawing.Point(4, 22);
             this.RecipesPage.Margin = new System.Windows.Forms.Padding(2);
             this.RecipesPage.Name = "RecipesPage";
-            this.RecipesPage.Size = new System.Drawing.Size(444, 302);
+            this.RecipesPage.Size = new System.Drawing.Size(444, 0);
             this.RecipesPage.TabIndex = 4;
             this.RecipesPage.Text = "Recipes";
             this.RecipesPage.UseVisualStyleBackColor = true;
@@ -650,7 +653,7 @@
             this.RecipeListView.LabelWrap = false;
             this.RecipeListView.Location = new System.Drawing.Point(0, 0);
             this.RecipeListView.Name = "RecipeListView";
-            this.RecipeListView.Size = new System.Drawing.Size(444, 302);
+            this.RecipeListView.Size = new System.Drawing.Size(444, 0);
             this.RecipeListView.SmallImageList = this.IconList;
             this.RecipeListView.TabIndex = 16;
             this.RecipeListView.UseCompatibleStateImageBehavior = false;
@@ -679,17 +682,29 @@
             // 
             // SetEnabledFromSciencePacksButton
             // 
-            this.EnabledObjectsTable.SetColumnSpan(this.SetEnabledFromSciencePacksButton, 2);
             this.SetEnabledFromSciencePacksButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SetEnabledFromSciencePacksButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.SetEnabledFromSciencePacksButton.Location = new System.Drawing.Point(4, 29);
             this.SetEnabledFromSciencePacksButton.Margin = new System.Windows.Forms.Padding(4, 2, 7, 2);
             this.SetEnabledFromSciencePacksButton.Name = "SetEnabledFromSciencePacksButton";
-            this.SetEnabledFromSciencePacksButton.Size = new System.Drawing.Size(449, 23);
+            this.SetEnabledFromSciencePacksButton.Size = new System.Drawing.Size(30, 23);
             this.SetEnabledFromSciencePacksButton.TabIndex = 32;
             this.SetEnabledFromSciencePacksButton.Text = "Assign based on science packs";
             this.SetEnabledFromSciencePacksButton.UseVisualStyleBackColor = true;
             this.SetEnabledFromSciencePacksButton.Click += new System.EventHandler(this.SetEnabledFromSciencePacksButton_Click);
+            // 
+            // btnEnableByTech
+            // 
+            this.btnEnableByTech.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnEnableByTech.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.btnEnableByTech.Location = new System.Drawing.Point(45, 29);
+            this.btnEnableByTech.Margin = new System.Windows.Forms.Padding(4, 2, 7, 2);
+            this.btnEnableByTech.Name = "btnEnableByTech";
+            this.btnEnableByTech.Size = new System.Drawing.Size(408, 23);
+            this.btnEnableByTech.TabIndex = 34;
+            this.btnEnableByTech.Text = "Assign based on technology";
+            this.btnEnableByTech.UseVisualStyleBackColor = true;
+            this.btnEnableByTech.Click += new System.EventHandler(this.btnEnableByTech_Click);
             // 
             // PresetsTable
             // 
@@ -1752,6 +1767,25 @@
             this.KeyRightInput.Size = new System.Drawing.Size(100, 20);
             this.KeyRightInput.TabIndex = 19;
             // 
+            // UseBlocks
+            // 
+            this.UseBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.UseBlocks.Location = new System.Drawing.Point(3, 130);
+            this.UseBlocks.Name = "UseBlocks";
+            this.UseBlocks.Size = new System.Drawing.Size(61, 20);
+            this.UseBlocks.TabIndex = 23;
+            this.UseBlocks.Text = "Use Blocks";
+            this.UseBlocks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cbUseBlocks
+            // 
+            this.cbUseBlocks.AutoSize = true;
+            this.cbUseBlocks.Location = new System.Drawing.Point(70, 133);
+            this.cbUseBlocks.Name = "cbUseBlocks";
+            this.cbUseBlocks.Size = new System.Drawing.Size(15, 14);
+            this.cbUseBlocks.TabIndex = 24;
+            this.cbUseBlocks.UseVisualStyleBackColor = true;
+            // 
             // FormButtonsTable
             // 
             this.FormButtonsTable.AutoSize = true;
@@ -1777,25 +1811,6 @@
             this.RecipeToolTip.InitialDelay = 100000;
             this.RecipeToolTip.OwnerDraw = true;
             this.RecipeToolTip.ReshowDelay = 100000;
-            // 
-            // UseBlocks
-            // 
-            this.UseBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.UseBlocks.Location = new System.Drawing.Point(3, 130);
-            this.UseBlocks.Name = "UseBlocks";
-            this.UseBlocks.Size = new System.Drawing.Size(61, 20);
-            this.UseBlocks.TabIndex = 23;
-            this.UseBlocks.Text = "Use Blocks";
-            this.UseBlocks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cbUseBlocks
-            // 
-            this.cbUseBlocks.AutoSize = true;
-            this.cbUseBlocks.Location = new System.Drawing.Point(70, 133);
-            this.cbUseBlocks.Name = "cbUseBlocks";
-            this.cbUseBlocks.Size = new System.Drawing.Size(15, 14);
-            this.cbUseBlocks.TabIndex = 24;
-            this.cbUseBlocks.UseVisualStyleBackColor = true;
             // 
             // SettingsForm
             // 
@@ -1996,5 +2011,6 @@
         private System.Windows.Forms.NumericUpDown KeyScrollRatioInput;
         private System.Windows.Forms.Label UseBlocks;
         private System.Windows.Forms.CheckBox cbUseBlocks;
+        private System.Windows.Forms.Button btnEnableByTech;
     }
 }

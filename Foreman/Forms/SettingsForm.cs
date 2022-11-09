@@ -692,5 +692,19 @@ namespace Foreman
 
 			UpdateFilteredLists();
 		}
+
+        private void btnEnableByTech_Click(object sender, EventArgs e)
+        {
+			using (TechnologyEnabledForm form = new TechnologyEnabledForm(Options.DCache))
+			{
+				form.StartPosition = FormStartPosition.Manual;
+				form.Left = this.Left + 50;
+				form.Top = this.Top + 50;
+				DialogResult result = form.ShowDialog();
+
+				if (result == DialogResult.OK)
+					UpdateEnabledStatus();
+			}
+		}
     }
 }

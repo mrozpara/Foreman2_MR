@@ -209,6 +209,15 @@ namespace Foreman
 					exportString = exportString.Substring(0, exportString.IndexOf("<<<END-EXPORT-P0>>>") - 1);
 					JObject export = JObject.Parse(exportString);
 
+#if DEBUG
+					string str = Application.StartupPath + "\\Saved Graphs" + "\\export.fjson";
+					using (StreamWriter file = File.CreateText(str))
+					using (JsonTextWriter jsonWriter = new JsonTextWriter(file))
+					{
+						jsonWriter.Formatting = Formatting.Indented;
+						export.WriteTo(jsonWriter);
+					}
+#endif
 					SaveFileInfo = new SaveFileInfo();
 					foreach (var objJToken in export["mods"].ToList())
 						SaveFileInfo.Mods.Add((string)objJToken["name"], (string)objJToken["version"]);

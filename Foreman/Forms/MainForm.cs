@@ -16,6 +16,7 @@ namespace Foreman
 
 		public ProductionGraphViewer GraphViewer { get; set; }
 		public DataCache GlobalDataCache;
+		public Preset CurrentPreset;
 
 		public MainForm()
 		{
@@ -44,6 +45,7 @@ namespace Foreman
 			}
 
 			Properties.Settings.Default.Save();
+			
 		}
 		public void LoadPreset(Preset preset)
 		{
@@ -72,6 +74,73 @@ namespace Foreman
 				GC.Collect(); //loaded a new data cache - the old one should be collected (data caches can be over 1gb in size due to icons, plus whatever was in the old graph)
 			}
 			Invalidate();
+			CurrentPreset = preset;
+			LoadEnabledObjects();
+		}
+
+		private bool SaveEnabledObjects()
+		{
+			string path = Path.Combine(new string[] { Application.StartupPath, "Presets", CurrentPreset.Name + ".ejson" });
+			var serialiser = JsonSerializer.Create();
+			serialiser.Formatting = Formatting.Indented;
+			var writer = new JsonTextWriter(new StreamWriter(path));
+			try
+			{
+				serialiser.Serialize(writer, GlobalDataCache);
+				this.Text = string.Format(Path.GetFileName(path) + " ");
+				Invalidate();
+				return true;
+			}
+			catch (Exception exception)
+			{
+				MessageBox.Show("Could not save this file. See log for more details");
+				ErrorLogging.LogLine(String.Format("Error saving file '{0}'. Error: '{1}'", path, exception.Message));
+				ErrorLogging.LogLine(string.Format("Full error output: {0}", exception.ToString()));
+				return false;
+			}
+			finally
+			{
+				writer.Close();
+			}
+
+		}
+
+		private void LoadEnabledObjects()
+        {
+			JObject json = PresetProcessor.LoadEnabledObjects(CurrentPreset);
+
+			if (json == null) return;
+
+			foreach (Beacon beacon in GlobalDataCache.Beacons.Values)
+				beacon.Enabled = false;
+			foreach (string beacon in json["EnabledBeacons"].Select(t => (string)t).ToList())
+				if (GlobalDataCache.Beacons.ContainsKey(beacon))
+					GlobalDataCache.Beacons[beacon].Enabled = true;
+
+			foreach (Assembler assembler in GlobalDataCache.Assemblers.Values)
+				assembler.Enabled = false;
+			foreach (string name in json["EnabledAssemblers"].Select(t => (string)t).ToList())
+				if (GlobalDataCache.Assemblers.ContainsKey(name))
+					GlobalDataCache.Assemblers[name].Enabled = true;
+			GlobalDataCache.RocketAssembler.Enabled = GlobalDataCache.Assemblers["rocket-silo"]?.Enabled ?? false;
+
+			foreach (Module module in GlobalDataCache.Modules.Values)
+				module.Enabled = false;
+			foreach (string name in json["EnabledModules"].Select(t => (string)t).ToList())
+				if (GlobalDataCache.Modules.ContainsKey(name))
+					GlobalDataCache.Modules[name].Enabled = true;
+
+			foreach (Recipe recipe in GlobalDataCache.Recipes.Values)
+				recipe.Enabled = false;
+			foreach (string recipe in json["EnabledRecipes"].Select(t => (string)t).ToList())
+				if (GlobalDataCache.Recipes.ContainsKey(recipe))
+					GlobalDataCache.Recipes[recipe].Enabled = true;			
+
+			foreach (Technology tech in GlobalDataCache.Technologies.Values)
+				tech.Enabled = false;
+			foreach (string tech in json["EnabledTechnologies"].Select(t => (string)t).ToList())
+				if (GlobalDataCache.Technologies.ContainsKey(tech))
+					GlobalDataCache.Technologies[tech].Enabled = true;
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -561,6 +630,30 @@ namespace Foreman
 			//ListViewItem lvItem = graphSummaryRight.ItemsListView.SelectedItems[0];
 			graphSummaryRight.Visible = true;
 			graphSummaryRight.InitGraphSummary(GraphViewer.Graph.Nodes, GraphViewer.Graph.NodeLinks, GraphViewer.Graph.GetRateName(), GraphViewer);
+		}
+
+        private void btnLoadEnabled_Click(object sender, EventArgs e)
+        {
+			LoadEnabledObjects();
+        }
+
+        private void btnSaveEnabled_Click(object sender, EventArgs e)
+        {
+			SaveEnabledObjects();
+        }
+
+        private void btnDisplayEnabled_Click(object sender, EventArgs e)
+        {
+			using (TechnologyEnabledForm form = new TechnologyEnabledForm(GlobalDataCache))
+			{
+				form.StartPosition = FormStartPosition.Manual;
+				form.Left = this.Left + 50;
+				form.Top = this.Top + 50;
+				DialogResult result = form.ShowDialog();
+				SaveEnabledObjects();
+				GraphViewer.Graph.UpdateNodeStates();
+				GraphViewer.Graph.UpdateNodeValues();
+			}
 		}
     }
 

@@ -33,12 +33,34 @@ namespace Foreman
 
 		}
 
+		public static JObject LoadEnabledObjects(Preset preset)
+        {
+			string presetEnabledPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".ejson" });
+			//get Enabled status (if exists)
+			if (File.Exists(presetEnabledPath))
+			{
+				try
+				{
+					JObject jsonData = JObject.Parse(File.ReadAllText(presetEnabledPath));
+					return jsonData;
+				}
+				catch (Exception exception)
+				{
+					ErrorLogging.LogLine(string.Format("Error loading file '{0}'. Error: '{1}'",  presetEnabledPath, exception.Message));
+					ErrorLogging.LogLine(string.Format("Full error output: {0}", exception.ToString()));
+					return null;
+				}
+				
+			}
+			return null;
+		}
+
 		public static JObject PrepPreset(Preset preset)
 		{
 			string presetPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".pjson" });
 			string presetCustomPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".json" });
 			string presetBlockPath = Path.Combine(new string[] { Application.StartupPath, "Presets", preset.Name + ".bjson" });
-
+			
 			//get main preset
 			JObject jsonData = JObject.Parse(File.ReadAllText(presetPath));
 
