@@ -434,7 +434,7 @@ local function ExportResources()
 			tresource['mining_time'] = resource.mineable_properties.mining_time
 			if resource.mineable_properties.required_fluid then
 				tresource['required_fluid'] = resource.mineable_properties.required_fluid
-				tresource['fluid_amount'] = resource.mineable_properties.fluid_amount
+				tresource['fluid_amount'] = resource.mineable_properties.fluid_amount / 10.0
 			end
 			tresource['name'] = resource.name
 

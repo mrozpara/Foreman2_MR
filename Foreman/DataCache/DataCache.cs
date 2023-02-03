@@ -83,6 +83,10 @@ namespace Foreman
 		private SubgroupPrototype energySubgroupBoiling; //water to steam (boilers)
 		private SubgroupPrototype energySubgroupEnergy; //heat production (heat consumption is processed as 'fuel'), steam consumption, burning to energy
 		private SubgroupPrototype rocketLaunchSubgroup; //any rocket launch recipes will go here
+		
+
+		private GroupPrototype extraFormanEnergyProduction;
+		private SubgroupPrototype energyProducton; // all recipes producing energy
 
 		private ItemPrototype HeatItem;
 		private RecipePrototype HeatRecipe;
@@ -200,6 +204,13 @@ namespace Foreman
 			missingSubgroup.myGroup = new GroupPrototype(this, "§§MISSING-G", "MISSING", "");
 
 			missingAssembler = new AssemblerPrototype(this, "§§a:MISSING-A", "missing assembler", EntityType.Assembler, EnergySource.Void, true);
+			
+			extraFormanEnergyProduction = new GroupPrototype(this, "§§g:extra_group_energy", "Power production", "~~~z2");
+			extraFormanEnergyProduction.SetIconAndColor(new IconColorPair(IconCache.GetIcon(Path.Combine("Graphics", "ExtraGroupIcon.png"), 64), Color.Gray));
+			energyProducton = new SubgroupPrototype(this, "§§sg:energy_production", "1");
+			energyProducton.myGroup = extraFormanEnergyProduction;
+			extraFormanEnergyProduction.subgroups.Add(energyProducton);
+			
 		}
 
 		public async Task LoadAllData(Preset preset, IProgress<KeyValuePair<int, string>> progress, bool loadIcons = true)
@@ -305,6 +316,12 @@ namespace Foreman
 				//calculate the science packs for each technology (based on both their listed science packs, the science packs of their prerequisites, and the science packs required to research the science packs)
 				ProcessSciencePacks();
 
+				//add Power Production recipes to separate subgroup
+				progress.Report(new KeyValuePair<int, string>(95, "Processing Power Generation..."));
+				ProcessPowerGeneration();
+
+				progress.Report(new KeyValuePair<int, string>(97, "Cleaning..."));
+
 				//delete any groups/subgroups without any items/recipes within them, and sort by order
 				CleanupGroups();
 
@@ -314,13 +331,17 @@ namespace Foreman
 #if DEBUG
 				//PrintDataCache();
 #endif
-
 				progress.Report(new KeyValuePair<int, string>(98, "Finalizing..."));
 				progress.Report(new KeyValuePair<int, string>(100, "Done!"));
 			});
 		}
 
-        public void SortTechnologies()
+		public void ProcessPowerGeneration() 
+		{
+		
+		}
+
+		public void SortTechnologies()
         {
 			technologiesSorted.Sort();
 		}
@@ -979,7 +1000,7 @@ namespace Foreman
 
 				case EnergySource.Electric:
 					entity.EnergyDrain = (double)objJToken["drain"] * 60f; //seconds
-					entity.EnergyConsumption = (double)objJToken["energy_usage"] * 60f; //seconds
+					entity.EnergyConsumption = (double)objJToken["max_energy_usage"] * 60f; //seconds
 					break;
 
 				case EnergySource.Void:

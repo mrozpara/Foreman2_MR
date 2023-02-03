@@ -60,34 +60,37 @@ namespace Foreman
 
 			foreach (Technology tech in DCache.TechnologiesSorted)
 			{
-
-				NFButton button = new NFButton();
-				
-				button.ForeColor = Color.Gray;
-				button.BackgroundImageLayout = ImageLayout.Center;
-				button.BackgroundImage = new Bitmap(tech.Icon, IconSize-4, IconSize-4);
-				button.UseVisualStyleBackColor = false;
-				button.FlatStyle = FlatStyle.Flat;
-				button.FlatAppearance.BorderSize = 0;
-				button.FlatAppearance.BorderColor = Color.Black;
-				button.TabStop = false;
-				button.Margin = new Padding(0);
-				button.Size = new Size(1, 1);
-				button.Dock = DockStyle.Fill;
-				button.Tag = tech;
-				button.Enabled = Enabled;
-				button.BackColor = tech.Enabled ? EnabledPackBGColor : DisabledPackBGColor;
-				button.MouseHover += new EventHandler(Button_MouseHover);
-				button.MouseLeave += new EventHandler(Button_MouseLeave);
-				button.Click += new EventHandler(Button_Click);
-
-				TechnologyTable.Controls.Add(button);
-				TechnologiesButtons.Add(button, tech.Enabled);
-				if (tech.Enabled)
+				if (tech.Available)
 				{
-					E++;
-				} else { D++; }
-				AddTechPacksToList(tech);
+					NFButton button = new NFButton();
+
+					button.ForeColor = Color.Gray;
+					button.BackgroundImageLayout = ImageLayout.Center;
+					button.BackgroundImage = new Bitmap(tech.Icon, IconSize - 4, IconSize - 4);
+					button.UseVisualStyleBackColor = false;
+					button.FlatStyle = FlatStyle.Flat;
+					button.FlatAppearance.BorderSize = 0;
+					button.FlatAppearance.BorderColor = Color.Black;
+					button.TabStop = false;
+					button.Margin = new Padding(0);
+					button.Size = new Size(1, 1);
+					button.Dock = DockStyle.Fill;
+					button.Tag = tech;
+					button.Enabled = Enabled;
+					button.BackColor = tech.Enabled ? EnabledPackBGColor : DisabledPackBGColor;
+					button.MouseHover += new EventHandler(Button_MouseHover);
+					button.MouseLeave += new EventHandler(Button_MouseLeave);
+					button.Click += new EventHandler(Button_Click);
+
+					TechnologyTable.Controls.Add(button);
+					TechnologiesButtons.Add(button, tech.Enabled);
+					if (tech.Enabled)
+					{
+						E++;
+					}
+					else { D++; }
+					AddTechPacksToList(tech);
+				}
 			}
 			labelD.Text = "Disabled: " + D;
 			foreach (Item item in sciPackSetDisabled.Keys)
