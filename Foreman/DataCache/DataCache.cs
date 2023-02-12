@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
 
 namespace Foreman
 {
-	public class DataCache
+	public class DataCache : ISerializable
 	{
 		public string PresetName { get; private set; }
 
@@ -25,6 +26,9 @@ namespace Foreman
 
 		public IReadOnlyDictionary<string, string> IncludedMods { get { return includedMods; } }
 		public IReadOnlyDictionary<string, Technology> Technologies { get { return technologies; } }
+		public IReadOnlyList<Technology> TechnologiesSorted { get { return technologiesSorted; } }
+		private List<TechnologyPrototype> technologiesSorted;
+
 		public IReadOnlyDictionary<string, Group> Groups { get { return groups; } }
 		public IReadOnlyDictionary<string, Subgroup> Subgroups { get { return subgroups; } }
 		public IReadOnlyDictionary<string, Item> Items { get { return items; } }
@@ -79,6 +83,10 @@ namespace Foreman
 		private SubgroupPrototype energySubgroupBoiling; //water to steam (boilers)
 		private SubgroupPrototype energySubgroupEnergy; //heat production (heat consumption is processed as 'fuel'), steam consumption, burning to energy
 		private SubgroupPrototype rocketLaunchSubgroup; //any rocket launch recipes will go here
+		
+
+		private GroupPrototype extraFormanEnergyProduction;
+		private SubgroupPrototype energyProducton; // all recipes producing energy
 
 		private ItemPrototype HeatItem;
 		private RecipePrototype HeatRecipe;
@@ -106,6 +114,8 @@ namespace Foreman
 
 			includedMods = new Dictionary<string, string>();
 			technologies = new Dictionary<string, Technology>();
+			technologiesSorted = new List<TechnologyPrototype>();
+
 			groups = new Dictionary<string, Group>();
 			subgroups = new Dictionary<string, Subgroup>();
 			items = new Dictionary<string, Item>();
@@ -128,7 +138,7 @@ namespace Foreman
 
 		private void GenerateHelperObjects()
 		{
-			startingTech = new TechnologyPrototype(this, "§§t:starting_tech", "Starting Technology");
+			startingTech = new TechnologyPrototype(this, "§§t:starting_tech", "Starting Technology", "-");
 			startingTech.Tier = 0;
 
 			extraFormanGroup = new GroupPrototype(this, "§§g:extra_group", "Resource Extraction\nPower Generation\nRocket Launches", "~~~z1");
@@ -194,6 +204,13 @@ namespace Foreman
 			missingSubgroup.myGroup = new GroupPrototype(this, "§§MISSING-G", "MISSING", "");
 
 			missingAssembler = new AssemblerPrototype(this, "§§a:MISSING-A", "missing assembler", EntityType.Assembler, EnergySource.Void, true);
+			
+			extraFormanEnergyProduction = new GroupPrototype(this, "§§g:extra_group_energy", "Power production", "~~~z2");
+			extraFormanEnergyProduction.SetIconAndColor(new IconColorPair(IconCache.GetIcon(Path.Combine("Graphics", "ExtraGroupIcon.png"), 64), Color.Gray));
+			energyProducton = new SubgroupPrototype(this, "§§sg:energy_production", "1");
+			energyProducton.myGroup = extraFormanEnergyProduction;
+			extraFormanEnergyProduction.subgroups.Add(energyProducton);
+			
 		}
 
 		public async Task LoadAllData(Preset preset, IProgress<KeyValuePair<int, string>> progress, bool loadIcons = true)
@@ -268,6 +285,8 @@ namespace Foreman
 				foreach (SubgroupPrototype sg in subgroups.Values)
 					sg.SortIRs();
 
+				SortTechnologies();
+	
 				//The data read by the dataCache (json preset) includes everything. We need to now process it such that any items/recipes that cant be used dont appear.
 				//thus any object that has Unavailable set to true should be ignored. We will leave the option to use them to the user, but in most cases its better without them
 
@@ -297,6 +316,12 @@ namespace Foreman
 				//calculate the science packs for each technology (based on both their listed science packs, the science packs of their prerequisites, and the science packs required to research the science packs)
 				ProcessSciencePacks();
 
+				//add Power Production recipes to separate subgroup
+				progress.Report(new KeyValuePair<int, string>(95, "Processing Power Generation..."));
+				ProcessPowerGeneration();
+
+				progress.Report(new KeyValuePair<int, string>(97, "Cleaning..."));
+
 				//delete any groups/subgroups without any items/recipes within them, and sort by order
 				CleanupGroups();
 
@@ -306,13 +331,22 @@ namespace Foreman
 #if DEBUG
 				//PrintDataCache();
 #endif
-
 				progress.Report(new KeyValuePair<int, string>(98, "Finalizing..."));
 				progress.Report(new KeyValuePair<int, string>(100, "Done!"));
 			});
 		}
 
-		public void Clear()
+		public void ProcessPowerGeneration() 
+		{
+		
+		}
+
+		public void SortTechnologies()
+        {
+			technologiesSorted.Sort();
+		}
+
+        public void Clear()
 		{
 			RecipePrototype.ResetRecipeIDCounter();
 
@@ -716,7 +750,8 @@ namespace Foreman
 			TechnologyPrototype technology = new TechnologyPrototype(
 				this,
 				(string)objJToken["name"],
-				(string)objJToken["localised_name"]);
+				(string)objJToken["localised_name"],
+				(string)objJToken["order"]);
 
 			if (iconCache.ContainsKey((string)objJToken["icon_name"]))
 				technology.SetIconAndColor(iconCache[(string)objJToken["icon_name"]]);
@@ -744,7 +779,9 @@ namespace Foreman
 				}
 			}
 
+			technology.ResearchCost = (double)objJToken["research_unit_count"];
 			technologies.Add(technology.Name, technology);
+			technologiesSorted.Add(technology);
 		}
 
 		private void ProcessTechnologyP2(JToken objJToken)
@@ -963,7 +1000,7 @@ namespace Foreman
 
 				case EnergySource.Electric:
 					entity.EnergyDrain = (double)objJToken["drain"] * 60f; //seconds
-					entity.EnergyConsumption = (double)objJToken["energy_usage"] * 60f; //seconds
+					entity.EnergyConsumption = (double)objJToken["max_energy_usage"] * 60f; //seconds
 					break;
 
 				case EnergySource.Void:
@@ -1704,5 +1741,15 @@ namespace Foreman
 				Console.WriteLine();
 			}
 		}
-	}
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+			//enabled lists
+			info.AddValue("EnabledRecipes", Recipes.Values.Where(r => r.Enabled).Select(r => r.Name));
+			info.AddValue("EnabledAssemblers", Assemblers.Values.Where(a => a.Enabled).Select(a => a.Name));
+			info.AddValue("EnabledModules", Modules.Values.Where(m => m.Enabled).Select(m => m.Name));
+			info.AddValue("EnabledBeacons", Beacons.Values.Where(b => b.Enabled).Select(b => b.Name));
+            info.AddValue("EnabledTechnologies", Technologies.Values.Where(t => t.Enabled).Select(t => t.Name));
+        }
+    }
 }

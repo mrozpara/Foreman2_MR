@@ -887,5 +887,39 @@ namespace Foreman.Controls
 			UpdateFilteredAllNodesList();
 		}
 
-    }
+        private void AllNodesListView_ColumnClick(object sender, ColumnClickEventArgs e)
+		{
+			AllNodesListView_ColumnSort(unfilteredAllNodesList, filteredAllNodesList, AllNodesListView, e.Column);
+		}
+
+		private void AllNodesListView_ColumnSort(List<ListViewItem> unfilteredList, List<ListViewItem> filteredList, ListView owner, int column)
+		{
+			int reverseSortLamda = (lastSortOrder[owner] == column + 1) ? -1 : 1; //last sort was this very column -> this is now a reverse sort
+			lastSortOrder[owner] = reverseSortLamda * (column + 1);
+
+			unfilteredList.Sort((a, b) =>
+			{
+				int result;
+				if (column == 0)
+					result = a.Text.ToLower().CompareTo(b.Text.ToLower());
+				else
+					result = a.SubItems[column].Text.ToLower().CompareTo(b.SubItems[column].Text.ToLower());
+
+				if (result == 0)
+				{
+					if (column == 0)
+						result = a.SubItems[1].Text.ToLower().CompareTo(b.SubItems[1].Text.ToLower());
+					else
+						result = a.Text.ToLower().CompareTo(b.Text.ToLower());
+				}
+				return result * reverseSortLamda;
+
+			});
+
+			UpdateFilteredAllNodesList();
+			owner.Invalidate();
+		}
+
+	}
 }
+

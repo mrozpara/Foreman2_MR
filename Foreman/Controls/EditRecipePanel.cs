@@ -205,7 +205,7 @@ namespace Foreman
 			SetupAssemblerModuleOptions();
 
 			//beacon panel
-			BeaconTable.Visible = moduleOptions.Count > 0 && myGraphViewer.DCache.Beacons.Count > 0;
+			BeaconTable.Visible = moduleOptions.Count > 0 && myGraphViewer.LocalDCache.Beacons.Count > 0;
 			SetupBeaconOptions();
 		}
 
@@ -289,10 +289,10 @@ namespace Foreman
 
 		private void SetupBeaconOptions()
 		{
-			CleanTable(BeaconChoiceTable, myGraphViewer.DCache.Beacons.Values.Count(b => b.Enabled));
+			CleanTable(BeaconChoiceTable, myGraphViewer.LocalDCache.Beacons.Values.Count(b => b.Enabled));
 
 			BeaconOptions.Clear();
-			foreach (Beacon beacon in myGraphViewer.DCache.Beacons.Values.Where(b => b.Enabled))
+			foreach (Beacon beacon in myGraphViewer.LocalDCache.Beacons.Values.Where(b => b.Enabled))
 			{
 				Button button = InitializeBaseButton(beacon);
 				button.Click += new EventHandler(BeaconButton_Click);

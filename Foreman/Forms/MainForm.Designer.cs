@@ -57,7 +57,11 @@
             this.PauseUpdatesCheckbox = new System.Windows.Forms.CheckBox();
             this.GraphSummaryButton = new System.Windows.Forms.Button();
             this.VersionLabel = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnDisplayEnabled = new System.Windows.Forms.Button();
             this.btnFindSupply = new System.Windows.Forms.Button();
+            this.btnLoadEnabled = new System.Windows.Forms.Button();
+            this.btnSaveEnabled = new System.Windows.Forms.Button();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.schemaList = new Foreman.Controls.SchemaList();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -70,6 +74,7 @@
             this.GridlinesTable.SuspendLayout();
             this.ProductionGroupBox.SuspendLayout();
             this.GraphOptionsTable.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
@@ -93,7 +98,7 @@
             this.MainLayoutPanel.RowCount = 2;
             this.MainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.MainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.MainLayoutPanel.Size = new System.Drawing.Size(934, 761);
+            this.MainLayoutPanel.Size = new System.Drawing.Size(1124, 761);
             this.MainLayoutPanel.TabIndex = 1;
             // 
             // MenuTable
@@ -104,21 +109,20 @@
             this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MenuTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MenuTable.Controls.Add(this.MenuButtonsTable, 0, 0);
             this.MenuTable.Controls.Add(this.GridLinesGroupBox, 1, 0);
             this.MenuTable.Controls.Add(this.ProductionGroupBox, 2, 0);
             this.MenuTable.Controls.Add(this.VersionLabel, 5, 0);
-            this.MenuTable.Controls.Add(this.btnFindSupply, 3, 0);
+            this.MenuTable.Controls.Add(this.tableLayoutPanel1, 3, 0);
             this.MenuTable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MenuTable.Location = new System.Drawing.Point(3, 3);
             this.MenuTable.Name = "MenuTable";
             this.MenuTable.RowCount = 1;
             this.MenuTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.MenuTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.MenuTable.Size = new System.Drawing.Size(933, 130);
+            this.MenuTable.Size = new System.Drawing.Size(1118, 130);
             this.MenuTable.TabIndex = 18;
             // 
             // MenuButtonsTable
@@ -537,22 +541,71 @@
             // 
             this.VersionLabel.AutoSize = true;
             this.VersionLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.VersionLabel.Location = new System.Drawing.Point(826, 0);
+            this.VersionLabel.Location = new System.Drawing.Point(770, 0);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(104, 130);
+            this.VersionLabel.Size = new System.Drawing.Size(345, 130);
             this.VersionLabel.TabIndex = 18;
             this.VersionLabel.Text = "Foreman v2.0(MR)-1";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.btnDisplayEnabled, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.btnFindSupply, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnLoadEnabled, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.btnSaveEnabled, 0, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(664, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(100, 124);
+            this.tableLayoutPanel1.TabIndex = 20;
+            // 
+            // btnDisplayEnabled
+            // 
+            this.btnDisplayEnabled.Location = new System.Drawing.Point(3, 90);
+            this.btnDisplayEnabled.Name = "btnDisplayEnabled";
+            this.btnDisplayEnabled.Size = new System.Drawing.Size(75, 23);
+            this.btnDisplayEnabled.TabIndex = 22;
+            this.btnDisplayEnabled.Text = "Display";
+            this.btnDisplayEnabled.UseVisualStyleBackColor = true;
+            this.btnDisplayEnabled.Click += new System.EventHandler(this.btnDisplayEnabled_Click);
+            // 
             // btnFindSupply
             // 
-            this.btnFindSupply.Location = new System.Drawing.Point(664, 3);
+            this.btnFindSupply.Location = new System.Drawing.Point(3, 3);
             this.btnFindSupply.Name = "btnFindSupply";
             this.btnFindSupply.Size = new System.Drawing.Size(75, 23);
             this.btnFindSupply.TabIndex = 19;
             this.btnFindSupply.Text = "Summary";
             this.btnFindSupply.UseVisualStyleBackColor = true;
             this.btnFindSupply.Click += new System.EventHandler(this.btnFindSupply_Click);
+            // 
+            // btnLoadEnabled
+            // 
+            this.btnLoadEnabled.Location = new System.Drawing.Point(3, 32);
+            this.btnLoadEnabled.Name = "btnLoadEnabled";
+            this.btnLoadEnabled.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadEnabled.TabIndex = 20;
+            this.btnLoadEnabled.Text = "Load Enabled";
+            this.btnLoadEnabled.UseVisualStyleBackColor = true;
+            this.btnLoadEnabled.Click += new System.EventHandler(this.btnLoadEnabled_Click);
+            // 
+            // btnSaveEnabled
+            // 
+            this.btnSaveEnabled.Location = new System.Drawing.Point(3, 61);
+            this.btnSaveEnabled.Name = "btnSaveEnabled";
+            this.btnSaveEnabled.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveEnabled.TabIndex = 21;
+            this.btnSaveEnabled.Text = "Save Enabled";
+            this.btnSaveEnabled.UseVisualStyleBackColor = true;
+            this.btnSaveEnabled.Click += new System.EventHandler(this.btnSaveEnabled_Click);
             // 
             // MainSplitContainer
             // 
@@ -567,8 +620,8 @@
             // MainSplitContainer.Panel2
             // 
             this.MainSplitContainer.Panel2.Controls.Add(this.RightSplitContainer);
-            this.MainSplitContainer.Size = new System.Drawing.Size(933, 619);
-            this.MainSplitContainer.SplitterDistance = 78;
+            this.MainSplitContainer.Size = new System.Drawing.Size(1118, 619);
+            this.MainSplitContainer.SplitterDistance = 93;
             this.MainSplitContainer.SplitterWidth = 8;
             this.MainSplitContainer.TabIndex = 19;
             // 
@@ -577,7 +630,7 @@
             this.schemaList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.schemaList.Location = new System.Drawing.Point(0, 0);
             this.schemaList.Name = "schemaList";
-            this.schemaList.Size = new System.Drawing.Size(78, 619);
+            this.schemaList.Size = new System.Drawing.Size(93, 619);
             this.schemaList.TabIndex = 0;
             // 
             // RightSplitContainer
@@ -593,8 +646,8 @@
             // RightSplitContainer.Panel2
             // 
             this.RightSplitContainer.Panel2.Controls.Add(this.graphSummaryRight);
-            this.RightSplitContainer.Size = new System.Drawing.Size(847, 619);
-            this.RightSplitContainer.SplitterDistance = 812;
+            this.RightSplitContainer.Size = new System.Drawing.Size(1017, 619);
+            this.RightSplitContainer.SplitterDistance = 974;
             this.RightSplitContainer.TabIndex = 14;
             // 
             // GraphViewerTabContainer
@@ -604,7 +657,7 @@
             this.GraphViewerTabContainer.Location = new System.Drawing.Point(0, 0);
             this.GraphViewerTabContainer.Name = "GraphViewerTabContainer";
             this.GraphViewerTabContainer.SelectedIndex = 0;
-            this.GraphViewerTabContainer.Size = new System.Drawing.Size(812, 619);
+            this.GraphViewerTabContainer.Size = new System.Drawing.Size(974, 619);
             this.GraphViewerTabContainer.TabIndex = 13;
             // 
             // graphSummaryRight
@@ -622,7 +675,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(934, 761);
+            this.ClientSize = new System.Drawing.Size(1124, 761);
             this.Controls.Add(this.MainLayoutPanel);
             this.DoubleBuffered = true;
             this.KeyPreview = true;
@@ -647,6 +700,7 @@
             this.ProductionGroupBox.PerformLayout();
             this.GraphOptionsTable.ResumeLayout(false);
             this.GraphOptionsTable.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).EndInit();
@@ -695,6 +749,10 @@
         private System.Windows.Forms.SplitContainer RightSplitContainer;
         private Controls.GraphSummary graphSummaryRight;
         private System.Windows.Forms.Button btnFindSupply;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button btnLoadEnabled;
+        private System.Windows.Forms.Button btnSaveEnabled;
+        private System.Windows.Forms.Button btnDisplayEnabled;
     }
 }
 

@@ -91,7 +91,7 @@ namespace Foreman.Controls
         }
         public void TabControlGV_AddTab()
         {
-            Controls.TabPageGV tabPage = new Controls.TabPageGV();
+            Controls.TabPageGV tabPage = new Controls.TabPageGV(ParentForm);
             Controls.Add(tabPage);
 
             ProductionGraphViewer pgv = tabPage.GraphViewer;
@@ -150,7 +150,7 @@ namespace Foreman.Controls
             try
             {
                 TabControlGV_AddTab();
-                await ParentForm.GraphViewer.LoadFromJson(JObject.Parse(File.ReadAllText(path)), false, true);
+                await ParentForm.GraphViewer.LoadFromJson(JObject.Parse(File.ReadAllText(path)), false, false); //do not update enabled/disabled - as this is a global
                 ((TabPageGV)SelectedTab).savefilePath = path;
             }
             catch (Exception exception)
@@ -189,19 +189,6 @@ namespace Foreman.Controls
             ParentForm.GraphViewer.Graph.LowPriorityPower = 2f;
             ParentForm.GraphViewer.Graph.PullOutputNodes = false;
             ParentForm.GraphViewer.Graph.PullOutputNodesPower = 1f;
-
-            List<Preset> validPresets = MainForm.GetValidPresetsList();
-            if (validPresets != null && validPresets.Count > 0)
-            {
-                Properties.Settings.Default.CurrentPresetName = validPresets[0].Name;
-                ParentForm.GraphViewer.LoadPreset(validPresets[0]);                
-            }
-            else
-            {
-                Properties.Settings.Default.CurrentPresetName = "No Preset!";
-            }
-
-            Properties.Settings.Default.Save();
         }
     }
 }

@@ -490,5 +490,17 @@ namespace Foreman.Properties {
                 this["UseBlockAssemblers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseGlobalPreset {
+            get {
+                return ((bool)(this["UseGlobalPreset"]));
+            }
+            set {
+                this["UseGlobalPreset"] = value;
+            }
+        }
     }
 }

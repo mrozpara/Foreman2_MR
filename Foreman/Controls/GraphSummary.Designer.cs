@@ -248,6 +248,7 @@
             this.AllNodesListView.UseCompatibleStateImageBehavior = false;
             this.AllNodesListView.View = System.Windows.Forms.View.Details;
             this.AllNodesListView.VirtualMode = true;
+            this.AllNodesListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.AllNodesListView_ColumnClick);
             this.AllNodesListView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.AllNodesListView_RetrieveVirtualItem);
             this.AllNodesListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AllNodesListView_MouseDoubleClick);
             // 

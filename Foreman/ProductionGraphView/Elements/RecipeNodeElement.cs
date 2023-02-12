@@ -178,7 +178,7 @@ namespace Foreman
 						})));
 
 				RightClickMenu.Items.Add(new ToolStripSeparator());
-				NodeCopyOptions copiedOptions = NodeCopyOptions.GetNodeCopyOptions(Clipboard.GetText(), graphViewer.DCache);
+				NodeCopyOptions copiedOptions = NodeCopyOptions.GetNodeCopyOptions(Clipboard.GetText(), graphViewer.LocalDCache);
 				if (copiedOptions != null)
 				{
 					bool canPasteAssembler = rNodes.Any(rn => rn.BaseRecipe.Assemblers.Contains(copiedOptions.Assembler));

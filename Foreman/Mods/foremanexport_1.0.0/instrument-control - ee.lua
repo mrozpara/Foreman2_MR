@@ -60,6 +60,7 @@ local function ExportResearch()
 			table.insert(ttech['research_unit_ingredients'], tingredient)
 		end
 		ttech['research_unit_count'] = tech.research_unit_count
+		ttech['order'] = tech.order
 
 		ttech['lid'] = '$'..localindex
 		ExportLocalisedString(tech.localised_name, localindex)
@@ -434,7 +435,7 @@ local function ExportResources()
 			tresource['mining_time'] = resource.mineable_properties.mining_time
 			if resource.mineable_properties.required_fluid then
 				tresource['required_fluid'] = resource.mineable_properties.required_fluid
-				tresource['fluid_amount'] = resource.mineable_properties.fluid_amount
+				tresource['fluid_amount'] = resource.mineable_properties.fluid_amount / 10.0
 			end
 			tresource['name'] = resource.name
 
