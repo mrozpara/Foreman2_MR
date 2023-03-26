@@ -32,9 +32,19 @@ namespace Foreman
         }
         public void CalculateSize()
         {
-            SizeF stringSize = PGV.CreateGraphics().MeasureString(DisplayedNode.MyNode.LabelText, labelFont);
-            Width = (int)stringSize.Width;
-            Height = (int)stringSize.Height;
+            if (DisplayedNode.MyNode.IsAutoSize)
+            {
+                SizeF stringSize = PGV.CreateGraphics().MeasureString(DisplayedNode.MyNode.LabelText, labelFont);
+                Width = (int)stringSize.Width;
+                Height = (int)stringSize.Height;
+
+                DisplayedNode.MyNode.LabelWidth = Width;
+                DisplayedNode.MyNode.LabelHeight = Height;
+            } else
+            {
+                Width = DisplayedNode.MyNode.LabelWidth;
+                Height = DisplayedNode.MyNode.LabelHeight;
+            }
         }
         protected override void DetailsDraw(Graphics graphics, Point trans)
         {

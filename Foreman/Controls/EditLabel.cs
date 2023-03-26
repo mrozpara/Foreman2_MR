@@ -26,6 +26,9 @@ namespace Foreman
 
             txtLabelText.Text = nodeData.MyNode.LabelText;
             FontSize.Value = nodeData.MyNode.LabelSize;
+            cbIsAutoSize.Checked = nodeData.MyNode.IsAutoSize;
+            txtHeight.Text = nodeData.MyNode.LabelHeight.ToString();
+            txtWidth.Text = nodeData.MyNode.LabelWidth.ToString();
         }
 
         private void txtLabelText_TextChanged(object sender, EventArgs e)
@@ -36,6 +39,38 @@ namespace Foreman
         private void FontSize_ValueChanged(object sender, EventArgs e)
         {
             nodeController.SetLabelSize((int)FontSize.Value);
+        }
+
+        private void cbIsAutoSize_CheckedChanged(object sender, EventArgs e)
+        {
+            nodeController.SetAutoSize(cbIsAutoSize.Checked);
+        }
+
+        private void txtHeight_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int i = int.Parse(txtHeight.Text);
+                nodeController.SetHeight(i);
+            }
+            catch (Exception ex)
+            {
+               Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        private void txtWidth_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int i = int.Parse(txtWidth.Text);
+                nodeController.SetWidth(i);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine (ex.Message);
+            }
         }
     }
 }

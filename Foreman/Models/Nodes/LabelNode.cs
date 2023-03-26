@@ -21,10 +21,18 @@ namespace Foreman
 		
 		public string LabelText;
 		public int LabelSize;
-		public LabelNode(ProductionGraph graph, int nodeID, string text, int size) : base(graph, nodeID)
+		public bool IsAutoSize;
+		public int LabelWidth;
+		public int LabelHeight;
+
+		public LabelNode(ProductionGraph graph, int nodeID, string text, int size, bool isAS, int lWidth, int lHeight) : base(graph, nodeID)
 		{
 			LabelText = text;
 			LabelSize = size;
+			IsAutoSize = isAS;
+			LabelHeight = lHeight;
+			LabelWidth = lWidth;
+
 			controller = LabelNodeController.GetController(this);
 			ReadOnlyNode = new ReadOnlyLabelNode(this);
 		}
@@ -36,6 +44,9 @@ namespace Foreman
 			info.AddValue("NodeType", NodeType.Label);
 			info.AddValue("LabelText", LabelText);
 			info.AddValue("LabelSize", LabelSize);
+			info.AddValue("LabelAutoSize", IsAutoSize);
+			info.AddValue("LabelWidth", LabelWidth);
+			info.AddValue("LabelHeight", LabelHeight);
 		}
 	}
 	public class ReadOnlyLabelNode : ReadOnlyBaseNode
@@ -88,5 +99,19 @@ namespace Foreman
 			MyNode.LabelSize = size;
 		}
 
-	}
+        internal void SetAutoSize(bool IsAutoSize)
+        {
+            MyNode.IsAutoSize = IsAutoSize;
+        }
+
+        internal void SetHeight(int i)
+        {
+            MyNode.LabelHeight = i;
+        }
+
+		internal void SetWidth(int i)
+		{
+			MyNode.LabelWidth = i;
+		}
+    }
 }

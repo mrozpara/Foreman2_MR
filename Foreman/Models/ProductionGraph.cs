@@ -118,9 +118,9 @@ namespace Foreman
 
 		public BaseNodeController RequestNodeController(ReadOnlyBaseNode node) { if(roToNode.ContainsKey(node)) return roToNode[node].Controller; return null; }
 
-		public ReadOnlyLabelNode CreateLabelNode(string text, Point location, int size)
+		public ReadOnlyLabelNode CreateLabelNode(string text, Point location, int size, bool isAS, int lWidth, int lHeight)
         {
-			LabelNode node = new LabelNode(this, lastNodeID++, text, size);
+			LabelNode node = new LabelNode(this, lastNodeID++, text, size, isAS, lWidth, lHeight);
 			node.Location = location;
 			node.NodeDirection = DefaultNodeDirection;
 			nodes.Add(node);
@@ -459,7 +459,21 @@ namespace Foreman
 						case NodeType.Label:
 							itemName = (string)nodeJToken["LabelText"];
 							int itemSize = (int)nodeJToken["LabelSize"];
-							newNode = roToNode[CreateLabelNode(itemName, location,itemSize)];
+							
+							bool isAutoSize = true;
+							int lWidth = 0;
+							int lHeight = 0;
+
+							if (nodeJToken["LabelAutoSize"] != null)
+								isAutoSize = (bool)nodeJToken["LabelAutoSize"];
+
+							if (nodeJToken["LabelWidth"] != null)
+								lWidth = (int)nodeJToken["LabelWidth"];
+
+							if (nodeJToken["LabelHeight"] != null)
+								lHeight = (int)nodeJToken["LabelHeight"];
+
+							newNode = roToNode[CreateLabelNode(itemName, location,itemSize, isAutoSize, lWidth, lHeight)];
 							newNodeCollection.newNodes.Add(newNode.ReadOnlyNode);
 							break;
 						case NodeType.Consumer:

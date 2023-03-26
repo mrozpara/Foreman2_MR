@@ -222,7 +222,7 @@ namespace Foreman
 				switch (recipeRequestArgs.NodeType)
 				{
 					case NodeType.Label:
-						newNode = Graph.CreateLabelNode("Empty label", newLocation, 50);
+						newNode = Graph.CreateLabelNode("Empty label", newLocation, 50, true,0,0);
 						break;
 					case NodeType.Consumer:
 						newNode = Graph.CreateConsumerNode(baseItem, newLocation);
@@ -560,11 +560,15 @@ namespace Foreman
 
 		protected IEnumerable<GraphElement> GetPaintingOrder()
 		{
+			foreach (BaseNodeElement element in nodeElements.Where(e => e is LabelNodeElement))
+				yield return element;
+
 			if (draggedLinkElement != null)
 				yield return draggedLinkElement;
 			foreach (LinkElement element in linkElements)
 				yield return element;
-			foreach (BaseNodeElement element in nodeElements)
+
+			foreach (BaseNodeElement element in nodeElements.Where(e => !(e is LabelNodeElement)))
 				yield return element;
 		}
 
